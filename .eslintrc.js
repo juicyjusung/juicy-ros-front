@@ -14,6 +14,7 @@ module.exports = {
     // allow debugger during development
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'vue/html-closing-bracket-newline': 2,
+    'no-unused-vars': 'warn',
     quotes: ['error', 'single'],
     'prettier/prettier': [
       'error',
