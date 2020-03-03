@@ -96,7 +96,7 @@
         </v-toolbar>
       </template>
       <template v-slot:item.action="{ item }">
-        <v-icon class="mr-2" @click="editItem(item)">play_arrow</v-icon>
+        <v-icon class="mr-2" @click="run(item)">play_arrow</v-icon>
         <v-icon class="mr-2" @click="editItem(item)">edit</v-icon>
         <v-icon @click="deleteItem(item)">delete</v-icon>
       </template>
@@ -104,27 +104,19 @@
         <v-btn color="primary" @click="initialize">Reset</v-btn>
       </template>
     </v-data-table>
-    <v-snackbar v-model="snackbar" :timeout="3000" :color="snackbarColor">
-      {{ snackbarText }}
-      <v-btn dark text @click="snackbar = false">
-        Close
-      </v-btn>
-    </v-snackbar>
   </div>
 </template>
 
 <script>
 import * as ROS from '../store/RosTypes';
 import { mapActions, mapState } from 'vuex';
+import ROSLIB from 'roslib';
 
 export default {
   data: () => ({
     name: 'PublishArea',
     dialog: false,
     dialogkey: 0,
-    snackbar: false,
-    snackbarText: '',
-    snackbarColor: '',
     search: '',
     headers: [
       {
@@ -183,10 +175,8 @@ export default {
   },
 
   methods: {
-    ...mapActions([ROS.GET_TOPIC_LIST, ROS.SET_PUB_LIST, ROS.SET_TOPIC_LIST, ROS.ADD_TOPIC]),
-    initialize() {
-      this.GET_TOPIC_LIST();
-    },
+    ...mapActions([ROS.SET_PUB_LIST]),
+    initialize() {},
     editItem(item) {
       this.editedIndex = this.pubdata.indexOf(item);
       this.editedItem = Object.assign({}, item);
@@ -225,7 +215,7 @@ export default {
           this.SET_PUB_LIST(this.pubdata);
         }
         this.dialog = false;
-        this.setSnackbar('등록되었습니다', 'success');
+        this.$alert('success', '등록 되었습니다.');
         setTimeout(() => {
           this.editedItem = Object.assign({}, this.defaultItem);
           this.editedIndex = -1;
@@ -238,10 +228,19 @@ export default {
     forceRerender() {
       this.dialogkey += 1;
     },
-    setSnackbar(text = '', color = 'info') {
-      this.snackbar = true;
-      this.snackbarText = text;
-      this.snackbarColor = color;
+    run(item) {
+      try {
+        const topic = new ROSLIB.Topic({
+          ros: this.$ros(),
+          name: item.topicName,
+          messageType: item.msgType,
+        });
+        const message = new ROSLIB.Message(item.msg);
+        topic.publish(message);
+        this.$alert('success', `${item.pubname} publish 완료`);
+      } catch (e) {
+        console.error(e);
+      }
     },
   },
 };

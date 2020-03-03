@@ -1,0 +1,2 @@
+export const ADD_SNACK_ITEM = 'ADD_SNACK_ITEM';
+export const REMOVE_SNACK_ITEM = 'REMOVE_SNACK_ITEM';

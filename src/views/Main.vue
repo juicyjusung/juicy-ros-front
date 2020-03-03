@@ -15,10 +15,9 @@
 
 <script>
 import PublishArea from '../components/PublishArea';
-import TopicList from '../components/TopicList';
 export default {
   name: 'Main',
-  components: { TopicList, PublishArea },
+  components: { PublishArea },
 };
 </script>
 

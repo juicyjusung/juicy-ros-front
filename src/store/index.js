@@ -4,12 +4,15 @@ import axios from 'axios';
 
 import * as USER from './UserTypes';
 import * as ROS from './RosTypes';
+import * as COMMON from './CommonTypes';
 
 Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
     user: JSON.parse(localStorage.getItem('_user_')),
+    rosip: '',
+    rosstatus: '',
     topiclist: {},
     msgtypelist: {},
     pubdata: [
@@ -39,8 +42,23 @@ export default new Vuex.Store({
       },
     ],
     subdata: {},
+    snackid: 0,
+    snackItems: [],
   },
   mutations: {
+    [COMMON.ADD_SNACK_ITEM]: (state, payload) => {
+      state.snackItems.push({
+        id: state.snackid++,
+        color: payload.color,
+        message: payload.message,
+      });
+    },
+    [COMMON.REMOVE_SNACK_ITEM]: (state, payload) => {
+      const index = state.snackItems.findIndex(item => item.id === payload.id);
+      if (index !== -1) {
+        state.snackItems.splice(index, 1);
+      }
+    },
     [USER.LOGIN]: (state, payload) => {
       state.user = payload.user;
       localStorage.setItem('_user_', JSON.stringify(payload.user));
@@ -49,17 +67,11 @@ export default new Vuex.Store({
       state.user = null;
       localStorage.removeItem('_user_');
     },
-    [ROS.SET_TOPIC_LIST]: (state, payload) => {
-      state.topiclist = payload.topiclist;
+    [ROS.SET_ROS_IP]: (state, payload) => {
+      state.rosip = payload;
     },
-    [ROS.ADD_TOPIC]: (state, payload) => {
-      state.topiclist.push(payload.topic);
-    },
-    [ROS.ADD_MSGTYPE]: (state, payload) => {
-      state.msgtypelist.push(payload.msgtype);
-    },
-    [ROS.SET_MSG_TYPE_LIST]: (state, payload) => {
-      state.msgtypelist = payload.msgtypelist;
+    [ROS.SET_ROS_STATUS]: (state, payload) => {
+      state.rosstatus = payload;
     },
     [ROS.SET_PUB_LIST]: (state, payload) => {
       state.pubdata = payload;
@@ -90,21 +102,15 @@ export default new Vuex.Store({
       await axios.get('logouturl', options);
       commit(USER.LOGOUT);
     },
-    [ROS.GET_TOPIC_LIST]: async ({ state, commit }) => {
-      // const URL = '';
-      // const res = await axios({
-      //   method: 'get',
-      //   url: URL,
-      // });
-      // const { data } = res;
-      const data = {
-        topiclist: ['/clobot/chatbot/link_append', '/clobot/chatbot/link_append2', '/clobot/chatbot/link_append3'],
-      };
-      commit(ROS.SET_TOPIC_LIST, data);
-    },
     //payload : pubdata
     [ROS.SET_PUB_LIST]: async ({ state, commit }, payload) => {
       commit(ROS.SET_PUB_LIST, payload);
+    },
+    [ROS.GET_ROS_IP]: async ({ state, commit }) => {
+      const data = 'ws://clobot-ros.koreacentral.cloudapp.azure.com:9090';
+      console.log(data);
+      commit(ROS.SET_ROS_IP, data);
+      return data;
     },
   },
   modules: {},
