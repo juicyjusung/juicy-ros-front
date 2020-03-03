@@ -15,6 +15,7 @@ module.exports = {
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'vue/html-closing-bracket-newline': 2,
     'no-unused-vars': 'warn',
+    'vue/no-unused-components': 'warn',
     quotes: ['error', 'single'],
     'prettier/prettier': [
       'error',
