@@ -4,8 +4,8 @@
       <h1>juicy ROS web</h1>
     </div>
     <v-spacer></v-spacer>
-    <v-btn class="mr-4" @click="dialog = true">
-      <v-icon :color="$store.state.rosstatus === 'connected' ? 'green' : 'red'">lens</v-icon>
+    <v-btn class="mr-4" @click="open">
+      <v-icon :color="$store.state.rosstatus === 'connected' ? 'green' : 'red'" class="mr-2">lens</v-icon>
       ROS_IP<v-icon>settings</v-icon>
     </v-btn>
     <h2>Logout</h2>
@@ -16,7 +16,7 @@
         </v-card-title>
         <v-card-text>
           <v-container>
-            <v-text-field></v-text-field>
+            <v-text-field v-model="ROSIP"></v-text-field>
           </v-container>
         </v-card-text>
 
@@ -31,13 +31,30 @@
 </template>
 
 <script>
+import { mapActions, mapState } from 'vuex';
+import * as ROS from '../store/RosTypes';
+import * as USER from '../store/UserTypes';
+
 export default {
   name: 'Header',
   data: () => ({
     dialog: false,
+    ROSIP: '',
   }),
+  computed: {
+    ...mapState(['rosip']),
+  },
   methods: {
-    save() {},
+    ...mapActions([ROS.SET_ROS_IP]),
+    open() {
+      this.ROSIP = this.rosip;
+      this.dialog = true;
+    },
+    save() {
+      this.SET_ROS_IP(this.ROSIP);
+      this.$rosconnect(this.ROSIP);
+      this.dialog = false;
+    },
     close() {},
   },
 };

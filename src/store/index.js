@@ -6,6 +6,8 @@ import * as USER from './UserTypes';
 import * as ROS from './RosTypes';
 import * as COMMON from './CommonTypes';
 
+import AuthStore from '@/store/auth';
+
 Vue.use(Vuex);
 
 export default new Vuex.Store({
@@ -13,8 +15,6 @@ export default new Vuex.Store({
     user: JSON.parse(localStorage.getItem('_user_')),
     rosip: '',
     rosstatus: '',
-    topiclist: {},
-    msgtypelist: {},
     pubdata: [
       {
         pubname: '퍼블리셔이름퍼블리셔이름름',
@@ -41,7 +41,8 @@ export default new Vuex.Store({
         msg: '{a: 1}',
       },
     ],
-    subdata: {},
+    topicList: [],
+    subdata: [],
     snackid: 0,
     snackItems: [],
   },
@@ -61,7 +62,7 @@ export default new Vuex.Store({
     },
     [USER.LOGIN]: (state, payload) => {
       state.user = payload.user;
-      localStorage.setItem('_user_', JSON.stringify(payload.user));
+      localStorage.setItem('_user_', JSON.stringify(payload));
     },
     [USER.LOGOUT]: state => {
       state.user = null;
@@ -76,25 +77,34 @@ export default new Vuex.Store({
     [ROS.SET_PUB_LIST]: (state, payload) => {
       state.pubdata = payload;
     },
+    [ROS.SET_TOPIC_LIST]: (state, payload) => {
+      state.topicList = payload;
+    },
+    [ROS.RESPONSE_MESSAGE]: (state, payload) => {
+      Vue.set(state.topicList, payload.index, { ...state.topicList[payload.index], res: payload.res });
+    },
   },
   actions: {
-    // [USER.LOGIN]: ({ state, commit, dispatch }, payload) => {
-    //   if (!payload) return null;
-    //
-    //   try{
-    //     const { data } = await axios({
-    //       method: 'post',
-    //       url: 'url',
-    //       data: payload,
-    //     });
-    //     if(data) {
-    //       commit()
-    //     }
-    //   } catch(e) {
-    //     console.error(e);
-    //     throw new Error(e);
-    //   }
-    // },
+    [USER.LOGIN]: async ({ state, commit, dispatch }, payload) => {
+      // if (!payload) return null;
+
+      try {
+        const { data } = await axios({
+          method: 'post',
+          url: 'http://www.mocky.io/v2/5e663ea63100001dcd239dff',
+          data: payload,
+        });
+        if (data) {
+          commit(USER.LOGIN, data.user);
+          commit(ROS.SET_ROS_IP, data.rosip);
+          commit(ROS.SET_PUB_LIST, data.pubdata);
+          return data;
+        }
+      } catch (e) {
+        console.error(e);
+        throw new Error(e);
+      }
+    },
     [USER.LOGOUT]: async ({ state, commit, dispatch }, payload) => {
       const token = state.user && state.user.token;
       const auth = token ? `${token.token_type} ${token.access_token}` : null;
@@ -106,12 +116,11 @@ export default new Vuex.Store({
     [ROS.SET_PUB_LIST]: async ({ state, commit }, payload) => {
       commit(ROS.SET_PUB_LIST, payload);
     },
-    [ROS.GET_ROS_IP]: async ({ state, commit }) => {
-      const data = 'ws://clobot-ros.koreacentral.cloudapp.azure.com:9090';
-      console.log(data);
-      commit(ROS.SET_ROS_IP, data);
-      return data;
+    [ROS.SET_ROS_IP]: async ({ state, commit }, payload) => {
+      commit(ROS.SET_ROS_IP, payload);
     },
   },
-  modules: {},
+  modules: {
+    authStore: AuthStore,
+  },
 });

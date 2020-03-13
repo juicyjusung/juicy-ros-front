@@ -1,10 +1,11 @@
 <template>
-  <div>
+  <v-container class="mx-auto">
     <v-data-table :headers="headers" :search="search" :items="pubdata" class="elevation-1" calculate-widths>
       <template v-slot:top>
         <v-toolbar flat color="white">
           <v-toolbar-title>Publisher</v-toolbar-title>
           <v-divider class="mx-4" inset vertical></v-divider>
+          <v-spacer></v-spacer>
           <v-text-field
             v-model="search"
             append-icon="mdi-magnify"
@@ -12,7 +13,6 @@
             single-line
             hide-details
           ></v-text-field>
-          <v-spacer></v-spacer>
           <v-dialog :key="dialogkey" v-model="dialog" max-width="700px">
             <template v-slot:activator="{ on }">
               <v-btn color="primary" dark class="mb-2" v-on="on">New Item</v-btn>
@@ -95,6 +95,17 @@
           </v-dialog>
         </v-toolbar>
       </template>
+      <template v-slot:headerCell="props">
+        <span slot="activator">
+          {{ props.header.text }}
+        </span>
+      </template>
+      <template v-slot:items="{ item }">
+        <td>{{ item.pubname }}</td>
+        <td>{{ item.topicName }}</td>
+        <td>{{ item.msgType }}</td>
+        <td>{{ item.msg }}</td>
+      </template>
       <template v-slot:item.action="{ item }">
         <v-icon class="mr-2" @click="run(item)">play_arrow</v-icon>
         <v-icon class="mr-2" @click="editItem(item)">edit</v-icon>
@@ -104,7 +115,7 @@
         <v-btn color="primary" @click="initialize">Reset</v-btn>
       </template>
     </v-data-table>
-  </div>
+  </v-container>
 </template>
 
 <script>

@@ -1,0 +1,90 @@
+<template>
+  <v-row align="center" justify="center">
+    <v-col xs="12" sm="8" md="6" lg="4" xl="2">
+      <div v-if="activePanel === 'registration'">
+        <transition name="register-transition" enter-active-class="animated slideInRight faster">
+          <register-component @register="register" @loginNav="navigateToLogin"></register-component>
+        </transition>
+      </div>
+      <div v-if="activePanel === 'login'">
+        <transition name="login-transition" enter-active-class="animated slideInRight faster">
+          <login-component @login="login" @register="navigateToRegister" @close="closeModal()"></login-component>
+        </transition>
+      </div>
+    </v-col>
+  </v-row>
+</template>
+
+<script>
+import LoginComponent from '@/components/registrations/LoginComponent.vue';
+import RegisterComponent from '@/components/registrations/RegisterComponent.vue';
+
+export default {
+  name: 'UserAccountModal',
+  components: {
+    LoginComponent,
+    RegisterComponent,
+  },
+  data() {
+    return {
+      showLogin: true,
+      // activePanel: 'login',
+      activePanel: 'login',
+      showFailure: false,
+    };
+  },
+  methods: {
+    closeModal() {
+      this.$emit('loginSuccess');
+    },
+    async login(userInfo) {
+      try {
+        await this.$store.dispatch('authStore/login', userInfo);
+
+        this.$emit('loginSuccess');
+
+        this.$notify({
+          group: 'all',
+          type: 'success',
+          text: 'Successfully logged in',
+        });
+      } catch (err) {
+        this.$notify({
+          group: 'all',
+          type: 'error',
+          text: 'User credentials are not correct. Please try again',
+        });
+      }
+    },
+
+    async register(userInfo) {
+      try {
+        await this.$store.dispatch('authStore/registerUser', userInfo);
+
+        this.$emit('loginSuccess');
+        this.$notify({
+          group: 'all',
+          type: 'success',
+          text: 'User successfully created.',
+        });
+      } catch (err) {
+        this.$notify({
+          group: 'all',
+          type: 'error',
+          text: 'User could not be created at the moment. Please check if you already have an account.',
+        });
+      }
+    },
+
+    navigateToRegister() {
+      this.activePanel = 'registration';
+    },
+
+    navigateToLogin() {
+      this.activePanel = 'login';
+    },
+  },
+};
+</script>
+
+<style lang="scss" scoped></style>

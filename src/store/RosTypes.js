@@ -1,6 +1,8 @@
 export const SET_ROS_IP = 'SET_ROS_IP';
 export const GET_ROS_IP = 'GET_ROS_IP';
 export const SET_ROS_STATUS = 'SET_ROS_STATUS';
+export const SET_TOPIC_LIST = 'SET_TOPIC_LIST';
+export const RESPONSE_MESSAGE = 'RESPONSE_MESSAGE';
 export const GET_PUB_LIST = 'GET_PUB_LIST';
 export const SET_PUB_LIST = 'SET_PUB_LIST';
 export const GET_SUB_LIST = 'GET_SUB_LIST';
