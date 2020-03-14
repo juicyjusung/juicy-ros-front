@@ -1,60 +1,51 @@
 <template>
-  <v-container>
-    <v-form ref="form">
-      <v-card class="elevation-12">
-        <v-card-title>
-          <v-container class="justify-center">
-            <v-img src="@/assets/juicyros.png" />
-          </v-container>
-        </v-card-title>
-        <v-card-text>
-          <v-container>
-            <v-text-field
-              v-model="login.email"
-              prepend-icon="person"
-              :rules="rules.emailRules"
-              label="E-mail"
-              required
-            ></v-text-field>
-            <v-text-field
-              v-model="login.password"
-              prepend-icon="lock"
-              :rules="rules.min"
-              :append-icon="showPassword ? 'visibility_off' : 'visibility'"
-              :type="showPassword ? 'text' : 'password'"
-              name="password"
-              label="Password"
-              class="input-group--focused"
-              required
-              @keyup.native.enter="submit()"
-              @click:append="showPassword = !showPassword"
-            ></v-text-field>
-          </v-container>
-        </v-card-text>
-        <v-card-actions>
-          <v-container justify-center>
-            <v-layout row justify-center>
-              <v-btn color="primary" @click="submit">Login</v-btn>
-              <v-btn @click="register">Signup</v-btn>
-            </v-layout>
-          </v-container>
-        </v-card-actions>
-      </v-card>
-    </v-form>
-  </v-container>
+  <v-form ref="form">
+    <v-card class="elevation-12 ma-auto" width="400px" min-width="300px">
+      <v-card-title>
+        <v-container class="justify-center">
+          <v-img src="@/assets/juicyros.png" />
+        </v-container>
+      </v-card-title>
+      <v-card-text>
+        <v-container>
+          <v-text-field
+            v-model="login.email"
+            prepend-icon="person"
+            :rules="rules.emailRules"
+            label="E-mail"
+            required
+          ></v-text-field>
+          <v-text-field
+            v-model="login.password"
+            prepend-icon="lock"
+            :rules="rules.min"
+            :append-icon="showPassword ? 'visibility_off' : 'visibility'"
+            :type="showPassword ? 'text' : 'password'"
+            name="password"
+            label="Password"
+            class="input-group--focused"
+            required
+            @keyup.native.enter="submit()"
+            @click:append="showPassword = !showPassword"
+          ></v-text-field>
+        </v-container>
+      </v-card-text>
+      <v-card-actions>
+        <v-container justify-center>
+          <v-layout row justify-center>
+            <v-btn color="primary" @click="submit">Login</v-btn>
+            <v-btn @click="navigateToRegister">Signup</v-btn>
+          </v-layout>
+        </v-container>
+      </v-card-actions>
+    </v-card>
+  </v-form>
 </template>
 
 <script>
-import { validationMixin } from 'vuelidate';
-import { required } from 'vuelidate/lib/validators';
-import axios from 'axios';
-
 export default {
-  mixins: [validationMixin],
   data: () => ({
     showPassword: false,
-    loginError: false,
-    loading: false,
     login: {
       email: '',
       password: '',
@@ -64,30 +55,7 @@ export default {
       emailRules: [v => !!v || 'E-mail is required', v => /.+@.+\..+/.test(v) || 'E-mail must be valid'],
     },
   }),
-  validations: {
-    login: {
-      email: {
-        required,
-      },
-      password: {
-        required,
-      },
-    },
-  },
-  computed: {
-    usernameErrors() {
-      const errors = [];
-      if (!this.$v.login.username.$dirty) return errors;
-      !this.$v.login.username.required && errors.push('');
-      return errors;
-    },
-    passwordErrors() {
-      const errors = [];
-      if (!this.$v.login.password.$dirty) return errors;
-      !this.$v.login.password.required && errors.push('La password è obbligatoria.');
-      return errors;
-    },
-  },
+  computed: {},
   methods: {
     validate() {
       return this.$refs.form.validate();
@@ -100,8 +68,8 @@ export default {
         });
       }
     },
-    register() {
-      this.$emit('register');
+    navigateToRegister() {
+      this.$emit('navigateToRegister');
     },
   },
 };

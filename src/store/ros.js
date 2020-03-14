@@ -4,10 +4,11 @@ import Vue from 'vue';
 export default {
   namespaced: true,
   state: {
-    email: '',
-    name: '',
-    isSessionActive: true,
-    permissions: [],
+    currentRos: undefined,
+    rosStatus: '',
+    rosConnectionList: [],
+    rosPubData: [],
+    rosTopicList: [],
   },
   actions: {
     async registerUser({ commit }, payload) {
@@ -31,6 +32,26 @@ export default {
         throw new Error(err);
       }
     },
+
+    async getUserData({ commit }, payload) {
+      try {
+        const res = await Vue.prototype.$axios({
+          method: 'post',
+          url: ProxyUrls.registerUrl,
+          data: payload,
+        });
+
+        if (res && res.data) {
+          commit('setEmail', res.data.email);
+          commit('setName', res.data.name);
+          commit('setSessionActive', true);
+        }
+
+        return res;
+      } catch (err) {
+        throw new Error(err);
+      }
+    }
 
     async login({ commit }, payload) {
       if (!payload) return null;

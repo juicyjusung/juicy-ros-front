@@ -29,7 +29,6 @@ export default {
     isLoading: false,
   }),
   computed: {
-    ...mapState(['rosip']),
     ...mapGetters({
       isSessionActive: 'authStore/isSessionActive',
     }),

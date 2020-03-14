@@ -1,14 +1,18 @@
 <template>
-  <v-row align="center" justify="center">
-    <v-col xs="12" sm="8" md="6" lg="4" xl="2">
-      <div v-if="activePanel === 'registration'">
-        <transition name="register-transition" enter-active-class="animated slideInRight faster">
-          <register-component @register="register" @loginNav="navigateToLogin"></register-component>
+  <v-row class="ma-auto">
+    <v-col>
+      <v-container v-if="activePanel === 'registration'">
+        <transition name="register-transition" enter-active-class="animated slideInRight">
+          <register-component @signup="register" @loginNav="navigateToLogin"></register-component>
         </transition>
-      </div>
+      </v-container>
       <div v-if="activePanel === 'login'">
-        <transition name="login-transition" enter-active-class="animated slideInRight faster">
-          <login-component @login="login" @register="navigateToRegister" @close="closeModal()"></login-component>
+        <transition name="login-transition" enter-active-class="animated slideInRight">
+          <login-component
+            @login="login"
+            @navigateToRegister="navigateToRegister"
+            @close="closeModal()"
+          ></login-component>
         </transition>
       </div>
     </v-col>
@@ -28,7 +32,6 @@ export default {
   data() {
     return {
       showLogin: true,
-      // activePanel: 'login',
       activePanel: 'login',
       showFailure: false,
     };
