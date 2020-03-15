@@ -4,163 +4,65 @@ import Vue from 'vue';
 export default {
   namespaced: true,
   state: {
-    currentRos: undefined,
+    ros: undefined,
     rosStatus: '',
-    rosConnectionList: [],
-    rosPubData: [],
-    rosTopicList: [],
+    ross: [],
+    currentRos: {},
   },
   actions: {
-    async registerUser({ commit }, payload) {
-      if (!payload) return null;
-
+    async getRos({ commit }) {
       try {
         const res = await Vue.prototype.$axios({
-          method: 'post',
-          url: ProxyUrls.registerUrl,
-          data: payload,
-        });
-
-        if (res && res.data) {
-          commit('setEmail', res.data.email);
-          commit('setName', res.data.name);
-          commit('setSessionActive', true);
-        }
-
-        return res;
-      } catch (err) {
-        throw new Error(err);
-      }
-    },
-
-    async getUserData({ commit }, payload) {
-      try {
-        const res = await Vue.prototype.$axios({
-          method: 'post',
-          url: ProxyUrls.registerUrl,
-          data: payload,
-        });
-
-        if (res && res.data) {
-          commit('setEmail', res.data.email);
-          commit('setName', res.data.name);
-          commit('setSessionActive', true);
-        }
-
-        return res;
-      } catch (err) {
-        throw new Error(err);
-      }
-    }
-
-    async login({ commit }, payload) {
-      if (!payload) return null;
-
-      try {
-        const res = await Vue.prototype.$axios({
-          method: 'post',
-          url: ProxyUrls.loginUrl,
-          data: payload,
-          // withCredentials: true,
-        });
-
-        if (res && res.data) {
-          commit('setEmail', res.data.email);
-          commit('setName', res.data.name);
-          commit('setSessionActive', true);
-          // commit('setPermissions', res.data.permissions);
-          // localStorage.setItem('permissions', res.data.permissions);
-        }
-        return res;
-      } catch (err) {
-        throw new Error(err);
-      }
-    },
-
-    async logout({ commit }) {
-      try {
-        const { data } = await Vue.prototype.$axios({
           method: 'get',
-          url: ProxyUrls.logoutUrl,
+          url: ProxyUrls.allRos,
+          withCredentials: true,
         });
 
-        if (data) {
-          commit('logout');
-          return true;
+        if (res && res.data) {
+          commit('setUserRoss', res.data.responseData.ros);
         }
-        throw new Error('Could not be fulfilled');
-      } catch (error) {
-        throw new Error(error);
+
+        return res;
+      } catch (e) {
+        throw new Error(e);
       }
     },
-
-    async initiateAppSession({ commit }) {
-      const res = await Vue.prototype.$axios({
-        method: 'get',
-        url: ProxyUrls.isSessionActive,
-      });
-      if (res && res.data === true) {
-        commit('setEmail', localStorage.getItem('email'));
-        commit('setName', localStorage.getItem('name'));
-        commit('setSessionActive', true);
-      } else {
-        commit('setSessionActive', false);
+    async addRos({ commit }, payload) {
+      try {
+        const res = await Vue.prototype.$axios({
+          method: 'post',
+          url: ProxyUrls.addRos,
+          data: payload,
+          withCredentials: true,
+        });
+        console.log('res.data: ', res.data);
+        if (res && res.data) {
+          commit('addRos', res.data.responseData);
+        }
+      } catch (e) {
+        throw new Error(e);
       }
     },
   },
+
   mutations: {
-    setPermissions(state, payload) {
-      state.permissions = payload;
+    setUserRoss: (state, payload) => {
+      state.ross = payload;
     },
-
-    setEmail(state, email) {
-      state.email = email;
-      localStorage.setItem('email', email);
+    addRos(state, payload) {
+      console.log('addRos payload: ', payload);
+      state = state.ross.push(payload);
     },
-
-    setName(state, name) {
-      state.name = name;
-      localStorage.setItem('name', name);
+    setCurrentRos(state, payload) {
+      state.currentRos = payload;
     },
-
-    setSessionActive(state, val) {
-      state.isSessionActive = val;
-      if (!val) {
-        localStorage.removeItem('email');
-        localStorage.removeItem('name');
-        localStorage.removeItem('permissions');
-      }
-    },
-
-    logout(state) {
-      state.isSessionActive = false;
-      state.permissions = [];
-      state.name = '';
-      state.email = '';
-      localStorage.removeItem('email');
-      localStorage.removeItem('name');
-      localStorage.removeItem('permissions');
+    setRosStatus(state, payload) {
+      state.rosStatus = payload;
     },
   },
   getters: {
-    getName(state) {
-      return state.name;
-    },
-
-    getEmail(state) {
-      return state.email;
-    },
-
-    getFirstName(state) {
-      return state.name.split(' ')[0];
-    },
-
-    isSessionActive(state) {
-      return state.isSessionActive;
-    },
-
-    permissions(state) {
-      return state.permissions;
+    getRosConnections(state) {
+      return state.ross;
     },
   },
 };

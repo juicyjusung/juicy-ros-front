@@ -4,7 +4,8 @@ import Main from '../views/Main.vue';
 import Home from '../views/Home';
 import PageNotFound from '@/views/notfound.vue';
 import Login from '../views/Login.vue';
-import Test from '@/views/Test';
+import Test from '@/views/Main';
+import Ros from '@/views/RosPage';
 
 Vue.use(Router);
 
@@ -18,12 +19,17 @@ const routes = [
     children: [
       {
         path: '/',
-        component: Test,
+        component: Main,
       },
       {
         path: 'test',
         name: 'test',
         component: Test,
+      },
+      {
+        path: 'ros',
+        name: 'ros',
+        component: Ros,
       },
       // {
       //   path: 'about',

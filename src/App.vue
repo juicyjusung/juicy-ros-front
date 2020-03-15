@@ -9,9 +9,6 @@
 </template>
 
 <script>
-import Main from './views/Main';
-import Snackbar from './components/Snackbar';
-import Header from './components/Header';
 import { FingerprintSpinner } from 'epic-spinners';
 import { mapState, mapActions, mapGetters } from 'vuex';
 import { eventHub } from '@/utils/EventHub';
@@ -34,20 +31,27 @@ export default {
     }),
   },
   async created() {
-    const { rosip } = await this.LOGIN();
-    this.$rosconnect(rosip);
     eventHub.$on('before-request', this.setLoading);
     eventHub.$on('request-error', this.unsetLoading);
     eventHub.$on('after-response', this.unsetLoading);
     eventHub.$on('response-error', this.unsetLoading);
 
+    eventHub.$on('before-websocket-connect', this.setLoading);
+    eventHub.$on('websocket-connected', this.unsetLoading);
+    eventHub.$on('websocket-errored', this.unsetLoading);
+
     await this.$store.dispatch('authStore/initiateAppSession');
+    await this.$store.dispatch('rosStore/getRos');
   },
   beforeDestroy() {
     eventHub.$off('before-request', this.setLoading);
     eventHub.$off('request-error', this.unsetLoading);
     eventHub.$off('after-response', this.unsetLoading);
     eventHub.$off('response-error', this.unsetLoading);
+
+    eventHub.$off('before-websocket-connect', this.setLoading);
+    eventHub.$off('websocket-connected', this.unsetLoading);
+    eventHub.$off('websocket-errored', this.unsetLoading);
   },
   methods: {
     ...mapActions([USER.LOGIN]),

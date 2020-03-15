@@ -1,24 +1,41 @@
 <template>
-  <v-container>
+  <v-container fluid>
     <v-row>
-      <v-data-table
-        v-model="selected"
-        :headers="headers"
-        :items="topicList"
-        item-key="topicName"
-        show-select
-        class="elevation-1"
-        hov
-        @click:row="goto"
-      >
-      </v-data-table>
+      <v-hover v-slot:default="{ hover }">
+        <v-card width="100%" class="ma-2" :elevation="hover ? 4 : 2">
+          <v-card-title>
+            Subscription
+            <v-spacer></v-spacer>
+            <v-text-field
+              v-model="search"
+              append-icon="mdi-magnify"
+              label="Search"
+              single-line
+              hide-details
+            ></v-text-field>
+          </v-card-title>
+          <v-data-table
+            v-model="selected"
+            :headers="headers"
+            :items="topicList"
+            :search="search"
+            item-key="topicName"
+            show-select
+            hov
+            @click:row="goto"
+          >
+          </v-data-table>
+        </v-card>
+      </v-hover>
     </v-row>
-    <v-row v-for="topic in filteredList" :key="topic.topicName">
+    <v-row v-for="topic in selected" :key="topic.topicName">
       <v-card class="ma-2" title width="100%" dark>
-        <v-card-title :id="topic.topicName.substring(1)">{{ topic.topicName }}</v-card-title>
+        <v-card-title :id="topic.topicName.replace(/\//gi, '_')" ref="topic.topicName">
+          {{ topic.topicName }}
+        </v-card-title>
         <perfect-scrollbar>
           <v-textarea
-            :value="JSON.stringify(topic.res, null, 4)"
+            :value="JSON.stringify(topic.message, null, 4)"
             readonly
             dark
             class="body-2"
@@ -36,8 +53,9 @@
 import ROSLIB from 'roslib';
 export default {
   name: 'SubscribeArea',
+  props: ['topicList', 'rosObj'],
   data: () => ({
-    excludeTopicList: ['/client_count', '/tf2_web_republisher/status'],
+    search: '',
     selected: [],
     headers: [
       {
@@ -50,41 +68,34 @@ export default {
       },
     ],
   }),
-  computed: {
-    topicList() {
-      return this.$store.state.topicList;
-    },
-    filteredList() {
-      const selectedName = this.selected.map(topic => topic.topicName);
-      return this.topicList.filter(topic => selectedName.includes(topic.topicName));
+  computed: {},
+  watch: {
+    selected: function(curList, prevList) {
+      if (!curList) return;
+      prevList.forEach(topic => {
+        topic.topicObj.unsubscribe();
+      });
+      curList.forEach((topic, index) => {
+        const topicObj = new ROSLIB.Topic({
+          ros: this.rosObj,
+          name: topic.topicName,
+          messageTypes: topic.msgTypes,
+        });
+        this.selected[index].topicObj = topicObj;
+        topicObj.subscribe(res => {
+          this.selected[index].message = res;
+        });
+      });
     },
   },
-  async mounted() {
-    // this.topicList.forEach((topic, index) => {
-    //   new ROSLIB.Topic({
-    //     ros: this.$ros,
-    //     name: topic.topicName,
-    //     messageTypes: topic.msgTypes,
-    //   }).subscribe(res => {
-    //     this.topicList[index].res = res;
-    //   });
-    // });
-  },
+  async mounted() {},
   methods: {
-    subscribeTopic: function(topic) {},
     goto: function(item) {
-      this.$vuetify.goTo(`#${item.topicName.substring(1)}`, { offset: 0 });
+      if (!this.selected.includes(item)) return;
+      this.$vuetify.goTo(`#${item.topicName.replace(/\//gi, '_')}`, { offset: 0 });
     },
   },
 };
-/*
-  msgType:"std_msgs/Int32"
-  topicName:"/client_count"
-
-  msgType:"tf2_web_republisher/TFSubscriptionActionResult"
-  topicName:"/tf2_web_republisher/result"
-
-*/
 </script>
 
 <style scoped>

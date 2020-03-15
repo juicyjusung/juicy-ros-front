@@ -7,9 +7,9 @@ export default {
   validateResetToken: '/security/validatePasswordResetToken/',
   resetPassword: '/security/resetPassword',
 
-  allRosData: 'ros/getAllRosData',
-  addConnection: '/ros/addConection',
-  getConnections: '/ros/getConections',
+  allRos: '/ros/',
+  addRos: '/ros/createRos',
+  editRos: '/ros/editRos',
 
   searchProduct: '/catalog/search',
   confirmEmail: '/security/confirmEmailAddress',
