@@ -2,8 +2,8 @@
   <div>
     <v-list dense nav class="py-0">
       <v-list-item two-line>
-        <v-list-item-avatar>
-          <img src="https://randomuser.me/api/portraits/men/81.jpg" />
+        <v-list-item-avatar color="red">
+          <span class="white--text headline">{{ username.substr(0, 1) }}</span>
         </v-list-item-avatar>
 
         <v-list-item-content>
@@ -24,6 +24,7 @@
           </v-list-item-icon>
           <v-list-item-content>
             <v-list-item-title class="subtitle-1">{{ item.connection_name }}</v-list-item-title>
+            <v-list-item><v-btn>hello</v-btn></v-list-item>
           </v-list-item-content>
         </v-list-item>
       </v-list-item-group>
