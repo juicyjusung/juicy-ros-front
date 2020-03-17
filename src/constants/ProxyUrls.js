@@ -9,6 +9,7 @@ export default {
 
   allRos: '/ros/',
   addRos: '/ros/createRos',
+  removeRos: '/ros/removeRos',
   editRos: '/ros/editRos',
 
   searchProduct: '/catalog/search',

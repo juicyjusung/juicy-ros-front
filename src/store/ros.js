@@ -43,6 +43,21 @@ export default {
         throw new Error(e);
       }
     },
+    async removeRos({ commit }, payload) {
+      try {
+        const res = await Vue.prototype.$axios({
+          method: 'post',
+          url: ProxyUrls.removeRos,
+          data: payload,
+          withCredentials: true,
+        });
+        if (res && res.data) {
+          commit('setUserRoss', res.data.responseData.ros);
+        }
+      } catch (e) {
+        throw new Error(e);
+      }
+    },
   },
 
   mutations: {

@@ -18,14 +18,31 @@
     <v-list nav>
       <v-divider></v-divider>
       <v-list-item-group v-model="selected">
-        <v-list-item v-for="(item, i) in rosConnections" :key="i" link @click="setCurrentRos(item)">
+        <v-list-item
+          v-for="(item, i) in rosConnections"
+          :key="i"
+          link
+          class="justify-center"
+          @click="setCurrentRos(item)"
+        >
           <v-list-item-icon>
             <v-icon>fa-robot</v-icon>
           </v-list-item-icon>
           <v-list-item-content>
-            <v-list-item-title class="subtitle-1">{{ item.connection_name }}</v-list-item-title>
-            <v-list-item><v-btn>hello</v-btn></v-list-item>
+            <v-list-item-title class="subtitle-1">
+              {{ item.connection_name }}
+            </v-list-item-title>
           </v-list-item-content>
+          <v-list-item-action>
+            <v-container class="fill-height pa-0">
+              <v-btn icon>
+                <v-icon dense>edit</v-icon>
+              </v-btn>
+              <v-btn icon @click="onClickDelete(item)">
+                <v-icon dense>delete</v-icon>
+              </v-btn>
+            </v-container>
+          </v-list-item-action>
         </v-list-item>
       </v-list-item-group>
     </v-list>
@@ -35,6 +52,7 @@
 <script>
 import { mapGetters } from 'vuex';
 import AddRos from '@/components/modal/AddRos';
+import { eventHub } from '@/utils/EventHub';
 export default {
   name: 'LeftDrawer',
   components: { AddRos },
@@ -52,6 +70,16 @@ export default {
     setCurrentRos: function(ros) {
       this.$router.push({ path: '/ros' }).catch(() => {});
       this.$store.commit('rosStore/setCurrentRos', ros);
+    },
+    onClickDelete: function(item) {
+      const title = `${item.connection_name}을 삭제하겠습니까?`;
+      const text = '삭제된 Ros Connection은 복구할 수 없습니다';
+      console.log('clicked: ', item);
+      const executeFunc = () => {
+        console.log('item: ', item);
+        this.$store.dispatch('rosStore/removeRos', item);
+      };
+      eventHub.$emit('showConfirm', title, text, executeFunc);
     },
   },
 };
