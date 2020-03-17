@@ -4,6 +4,7 @@
     <div v-if="isLoading">
       <fingerprint-spinner class="spinner" :animation-duration="1500" :size="150" color="#136a8a" />
     </div>
+    <ConfirmModal></ConfirmModal>
     <router-view />
   </v-app>
 </template>
@@ -13,10 +14,12 @@ import { FingerprintSpinner } from 'epic-spinners';
 import { mapState, mapActions, mapGetters } from 'vuex';
 import { eventHub } from '@/utils/EventHub';
 import * as USER from './store/UserTypes';
+import ConfirmModal from '@/components/modal/ConfirmModal';
 export default {
   name: 'App',
 
   components: {
+    ConfirmModal,
     FingerprintSpinner,
   },
 
