@@ -70,7 +70,6 @@ const router = new Router({
 });
 
 router.beforeEach((to, from, next) => {
-  console.log(to);
   if (to.matched.some(record => record.meta.requiresAuth)) {
     // For some reason, local storage can send null as string 'null'
     if (localStorage.getItem('email') == null || localStorage.getItem('email') === 'null') {

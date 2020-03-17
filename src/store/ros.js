@@ -35,7 +35,6 @@ export default {
           data: payload,
           withCredentials: true,
         });
-        console.log('res.data: ', res.data);
         if (res && res.data) {
           commit('addRos', res.data.responseData);
         }

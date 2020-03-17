@@ -6,7 +6,7 @@ export default {
   state: {
     email: '',
     name: '',
-    isSessionActive: true,
+    isSessionActive: false,
     permissions: [],
   },
   actions: {

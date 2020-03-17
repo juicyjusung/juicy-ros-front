@@ -68,7 +68,6 @@ export default {
           url: this.url,
         };
         await this.$store.dispatch('rosStore/addRos', payload);
-        await this.$store.dispatch('rosStore/getRos');
         this.close();
         this.$notify({
           group: 'all',
