@@ -82,8 +82,10 @@ export default {
         commit('setEmail', localStorage.getItem('email'));
         commit('setName', localStorage.getItem('name'));
         commit('setSessionActive', true);
+        return true;
       } else {
         commit('setSessionActive', false);
+        return false;
       }
     },
   },

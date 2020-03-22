@@ -7,6 +7,8 @@ import Login from '../views/Login.vue';
 import Test from '@/views/Main';
 import Ros from '@/views/RosPage';
 
+import Store from '@/store';
+
 Vue.use(Router);
 
 const routes = [
@@ -69,10 +71,11 @@ const router = new Router({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeEach(async (to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
+    const isSessionActive = await Store.dispatch('authStore/initiateAppSession');
     // For some reason, local storage can send null as string 'null'
-    if (localStorage.getItem('email') == null || localStorage.getItem('email') === 'null') {
+    if (!isSessionActive || localStorage.getItem('email') == null || localStorage.getItem('email') === 'null') {
       next({
         path: '/login',
       });
