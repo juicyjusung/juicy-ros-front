@@ -44,7 +44,6 @@ export default {
     eventHub.$on('websocket-errored', this.unsetLoading);
 
     await this.$store.dispatch('authStore/initiateAppSession');
-    await this.$store.dispatch('rosStore/getRos');
   },
   beforeDestroy() {
     eventHub.$off('before-request', this.setLoading);

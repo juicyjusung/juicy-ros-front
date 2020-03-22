@@ -2,74 +2,7 @@
   <div>
     <v-row no-gutters>
       <v-col cols="6" class="content">
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
-        <h1>hi</h1>
+        <PublishArea :key="currentRos._id" :topic-list="topicList" :ros-obj="ros"></PublishArea>
       </v-col>
       <v-col cols="6" class="content">
         <SubscribeArea :key="currentRos._id" :topic-list="topicList" :ros-obj="ros"></SubscribeArea>
@@ -82,10 +15,11 @@
 import ROSLIB from 'roslib';
 import { eventHub } from '@/utils/EventHub';
 import SubscribeArea from '@/components/SubscribeArea';
+import PublishArea from '@/components/PublishArea';
 
 export default {
   name: 'Ros',
-  components: { SubscribeArea },
+  components: { PublishArea, SubscribeArea },
   props: ['currentRos'],
   data: () => ({
     ros: undefined,
@@ -145,7 +79,7 @@ export default {
         try {
           ros.getTopics(res => {
             const { topics, types } = res;
-            resolve(topics.map((topic, index) => ({ topicName: topic, msgType: types[index], message: '' })));
+            resolve(topics.map((topic, index) => ({ topic_name: topic, message_type: types[index], message: '' })));
           });
         } catch (e) {
           reject(e);

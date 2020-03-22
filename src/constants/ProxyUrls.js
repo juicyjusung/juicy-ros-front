@@ -11,6 +11,9 @@ export default {
   addRos: '/ros/createRos',
   removeRos: '/ros/removeRos',
   editRos: '/ros/editRos',
+  addPub: '/ros/addPub',
+  editPub: '/ros/editPub',
+  removePub: '/ros/removePub',
 
   searchProduct: '/catalog/search',
   confirmEmail: '/security/confirmEmailAddress',

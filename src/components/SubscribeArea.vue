@@ -19,19 +19,22 @@
             :headers="headers"
             :items="topicList"
             :search="search"
-            item-key="topicName"
+            item-key="topic_name"
             show-select
             hov
             @click:row="goto"
           >
+            <template v-slot:no-data>
+              <p class="headline ma-auto">데이터가 없습니다.</p>
+            </template>
           </v-data-table>
         </v-card>
       </v-hover>
     </v-row>
-    <v-row v-for="topic in selected" :key="topic.topicName">
+    <v-row v-for="topic in selected" :key="topic.topic_name">
       <v-card class="ma-2" title width="100%" dark>
-        <v-card-title :id="topic.topicName.replace(/\//gi, '_')" ref="topic.topicName">
-          {{ topic.topicName }}
+        <v-card-title :id="topic.topic_name.replace(/\//gi, '_')" ref="topic.topic_name">
+          {{ topic.topic_name }}
         </v-card-title>
         <perfect-scrollbar>
           <v-textarea
@@ -60,11 +63,11 @@ export default {
     headers: [
       {
         text: 'Topic Name',
-        value: 'topicName',
+        value: 'topic_name',
       },
       {
         text: 'Message Type',
-        value: 'msgType',
+        value: 'message_type',
       },
     ],
   }),
@@ -78,8 +81,8 @@ export default {
       curList.forEach((topic, index) => {
         const topicObj = new ROSLIB.Topic({
           ros: this.rosObj,
-          name: topic.topicName,
-          messageTypes: topic.msgTypes,
+          name: topic.topic_name,
+          messageTypes: topic.message_type,
         });
         this.selected[index].topicObj = topicObj;
         topicObj.subscribe(res => {
@@ -92,7 +95,7 @@ export default {
   methods: {
     goto: function(item) {
       if (!this.selected.includes(item)) return;
-      this.$vuetify.goTo(`#${item.topicName.replace(/\//gi, '_')}`, { offset: 0 });
+      this.$vuetify.goTo(`#${item.topic_name.replace(/\//gi, '_')}`, { offset: 0 });
     },
   },
 };

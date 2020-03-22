@@ -35,7 +35,9 @@ export default {
     drawer: true,
   }),
   computed: {},
-
+  async created() {
+    await this.$store.dispatch('rosStore/getRos');
+  },
   methods: {
     async onClickLogout() {
       try {

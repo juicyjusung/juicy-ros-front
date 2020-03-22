@@ -45,13 +45,58 @@ export default {
     async removeRos({ commit }, payload) {
       try {
         const res = await Vue.prototype.$axios({
-          method: 'post',
+          method: 'delete',
           url: ProxyUrls.removeRos,
           data: payload,
           withCredentials: true,
         });
         if (res && res.data) {
           commit('setUserRoss', res.data.responseData.ros);
+        }
+      } catch (e) {
+        throw new Error(e);
+      }
+    },
+    async addPub({ commit }, payload) {
+      try {
+        const res = await Vue.prototype.$axios({
+          method: 'post',
+          url: ProxyUrls.addPub,
+          data: payload,
+          withCredentials: true,
+        });
+        if (res && res.data) {
+          commit('setCurrentRos', res.data.responseData);
+        }
+      } catch (e) {
+        throw new Error(e);
+      }
+    },
+    async editPub({ commit }, payload) {
+      try {
+        const res = await Vue.prototype.$axios({
+          method: 'put',
+          url: ProxyUrls.editPub,
+          data: payload,
+          withCredentials: true,
+        });
+        if (res && res.data) {
+          commit('setCurrentRos', res.data.responseData);
+        }
+      } catch (e) {
+        throw new Error(e);
+      }
+    },
+    async removePub({ commit }, payload) {
+      try {
+        const res = await Vue.prototype.$axios({
+          method: 'delete',
+          url: ProxyUrls.removePub,
+          data: payload,
+          withCredentials: true,
+        });
+        if (res && res.data) {
+          commit('setCurrentRos', res.data.responseData);
         }
       } catch (e) {
         throw new Error(e);
@@ -77,6 +122,9 @@ export default {
   getters: {
     getRosConnections(state) {
       return state.ross;
+    },
+    getCurrentRos(state) {
+      return state.currentRos;
     },
   },
 };

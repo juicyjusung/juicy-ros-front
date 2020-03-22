@@ -1,129 +1,140 @@
 <template>
-  <v-container class="mx-auto">
-    <v-data-table :headers="headers" :search="search" :items="pubdata" class="elevation-1" calculate-widths>
-      <template v-slot:top>
-        <v-toolbar flat color="white">
-          <v-toolbar-title>Publisher</v-toolbar-title>
-          <v-divider class="mx-4" inset vertical></v-divider>
-          <v-spacer></v-spacer>
-          <v-text-field
-            v-model="search"
-            append-icon="mdi-magnify"
-            label="Search"
-            single-line
-            hide-details
-          ></v-text-field>
-          <v-dialog :key="dialogkey" v-model="dialog" max-width="700px">
-            <template v-slot:activator="{ on }">
-              <v-btn color="primary" dark class="mb-2" v-on="on">New Item</v-btn>
-            </template>
-            <v-card>
-              <v-card-title>
-                <span class="headline">{{ formTitle }}</span>
-              </v-card-title>
-              <v-card-text>
-                <v-container>
-                  <v-row>
-                    <v-col cols="12">
-                      <v-text-field
-                        ref="pubname"
-                        v-model="editedItem.pubname"
-                        :rules="[rules.required]"
-                        label="Pub Name"
-                        filled
-                        required
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="7">
-                      <v-text-field
-                        ref="topicName"
-                        v-model="editedItem.topicName"
-                        :rules="[rules.required]"
-                        label="토픽명"
-                        filled
-                        required
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="5">
-                      <v-autocomplete
-                        v-model="editedItem.topicName"
-                        :item="editedItem.topicName"
-                        :items="topicList"
-                        label="Topic Name List"
-                      ></v-autocomplete>
-                    </v-col>
-                    <v-col cols="7">
-                      <v-text-field
-                        ref="msgType"
-                        v-model="editedItem.msgType"
-                        :rules="[rules.required]"
-                        label="메세지타입"
-                        filled
-                        required
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="5">
-                      <v-autocomplete
-                        v-model="editedItem.msgType"
-                        label="Msg Type List"
-                        :items="msgtypeList"
-                        :item="editedItem.msgType"
-                      ></v-autocomplete>
-                    </v-col>
-                    <v-col col2="12">
-                      <v-textarea
-                        ref="msg"
-                        v-model="editedItem.msg"
-                        :rules="[rules.required]"
-                        clearable
-                        clear-icon="cancel"
-                        label="Value"
-                        filled
-                        required
-                      ></v-textarea>
-                    </v-col>
-                  </v-row>
-                </v-container>
-              </v-card-text>
+  <v-container fluid>
+    <v-row>
+      <v-hover v-slot:default="{ hover }">
+        <v-card width="100%" class="ma-2" :elevation="hover ? 4 : 2">
+          <v-card-title>
+            Publishing
+            <v-spacer></v-spacer>
+            <v-text-field
+              v-model="search"
+              append-icon="mdi-magnify"
+              label="Search"
+              single-line
+              hide-details
+            ></v-text-field>
+            <v-dialog :key="dialogkey" v-model="dialog" max-width="700px">
+              <template v-slot:activator="{ on }">
+                <v-btn color="primary" dark class="mb-2" v-on="on">New Item</v-btn>
+              </template>
+              <v-card>
+                <v-card-title>
+                  <span class="headline">{{ formTitle }}</span>
+                </v-card-title>
+                <v-card-text>
+                  <v-container>
+                    <v-row>
+                      <v-col cols="12">
+                        <v-text-field
+                          ref="pub_name"
+                          v-model="editedItem.pub_name"
+                          :rules="[rules.required]"
+                          label="Pub Name"
+                          filled
+                          required
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="7">
+                        <v-text-field
+                          ref="topic_name"
+                          v-model="editedItem.topic_name"
+                          :rules="[rules.required]"
+                          label="토픽명"
+                          filled
+                          required
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="5">
+                        <v-autocomplete
+                          v-model="editedItem.topic_name"
+                          :item="editedItem.topic_name"
+                          :items="topicNameList"
+                          label="Topic Name List"
+                        ></v-autocomplete>
+                      </v-col>
+                      <v-col cols="7">
+                        <v-text-field
+                          ref="message_type"
+                          v-model="editedItem.message_type"
+                          :rules="[rules.required]"
+                          label="메세지타입"
+                          filled
+                          required
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="5">
+                        <v-autocomplete
+                          v-model="editedItem.message_type"
+                          :item="editedItem.message_type"
+                          :items="messageTypeList"
+                          label="Msg Type List"
+                        ></v-autocomplete>
+                      </v-col>
+                      <v-col col2="12">
+                        <v-textarea
+                          ref="message"
+                          v-model="editedItem.message"
+                          :placeholder="messagePlaceholder"
+                          :rules="[rules.required]"
+                          clearable
+                          clear-icon="cancel"
+                          label="Value"
+                          filled
+                          required
+                        ></v-textarea>
+                      </v-col>
+                    </v-row>
+                  </v-container>
+                </v-card-text>
 
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
-                <v-btn color="blue darken-1" text @click="save">Save</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
-        </v-toolbar>
-      </template>
-      <template v-slot:headerCell="props">
-        <span slot="activator">
-          {{ props.header.text }}
-        </span>
-      </template>
-      <template v-slot:items="{ item }">
-        <td>{{ item.pubname }}</td>
-        <td>{{ item.topicName }}</td>
-        <td>{{ item.msgType }}</td>
-        <td>{{ item.msg }}</td>
-      </template>
-      <template v-slot:item.action="{ item }">
-        <v-icon class="mr-2" @click="run(item)">play_arrow</v-icon>
-        <v-icon class="mr-2" @click="editItem(item)">edit</v-icon>
-        <v-icon @click="deleteItem(item)">delete</v-icon>
-      </template>
-      <template v-slot:no-data>
-        <v-btn color="primary" @click="initialize">Reset</v-btn>
-      </template>
-    </v-data-table>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
+                  <v-btn color="blue darken-1" text @click="save">Save</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
+          </v-card-title>
+          <v-data-table
+            :headers="headers"
+            :search="search"
+            :items="currentRos.pub_data"
+            class="elevation-1"
+            calculate-widths
+          >
+            <template v-slot:headerCell="props">
+              <span slot="activator">
+                {{ props.header.text }}
+              </span>
+            </template>
+            <template v-slot:items="{ item }">
+              <td>{{ item.pub_name }}</td>
+              <td>{{ item.topic_name }}</td>
+              <td>{{ item.message_type }}</td>
+              <td>{{ item.message }}</td>
+            </template>
+            <template v-slot:item.action="{ item }">
+              <v-icon class="mr-2" @click="run(item)">play_arrow</v-icon>
+              <v-icon class="mr-2" @click="editItem(item)">edit</v-icon>
+              <v-icon @click="deleteItem(item)">delete</v-icon>
+            </template>
+            <template v-slot:no-data>
+              <p class="headline ma-auto">데이터가 없습니다.</p>
+            </template>
+          </v-data-table>
+        </v-card>
+      </v-hover>
+    </v-row>
   </v-container>
 </template>
 
 <script>
-import * as ROS from '../store/RosTypes';
-import { mapActions, mapState } from 'vuex';
+import { mapGetters } from 'vuex';
 import ROSLIB from 'roslib';
+import { eventHub } from '@/utils/EventHub';
 
 export default {
+  props: ['topicList', 'rosObj'],
   data: () => ({
     name: 'PublishArea',
     dialog: false,
@@ -133,45 +144,50 @@ export default {
       {
         text: 'Pub Name',
         align: 'start',
-        value: 'pubname',
+        value: 'pub_name',
       },
-      { text: 'Topic Name', align: 'start', value: 'topicName' },
-      { text: 'Msg Type', align: 'start', value: 'msgType' },
-      { text: 'Msg', align: 'start', value: 'msg' },
+      { text: 'Topic Name', align: 'start', value: 'topic_name' },
+      { text: 'Msg Type', align: 'start', value: 'message_type' },
+      { text: 'Msg', align: 'start', value: 'message' },
       { text: 'Actions', value: 'action', sortable: false },
     ],
     editedIndex: -1,
     editedItem: {
-      pubname: '',
-      topicName: '',
-      msgType: '',
-      msg: '',
+      pub_name: '',
+      topic_name: '',
+      message_type: '',
+      message: '',
     },
     defaultItem: {
-      pubname: '',
-      topicName: '',
-      msgType: '',
-      msg: '',
+      pub_name: '',
+      topic_name: '',
+      message_type: '',
+      message: '',
     },
     rules: {
       required: value => !!value || 'Required.',
     },
     formHasErrors: false,
+    messagePlaceholder: `{
+    "data": 3
+}`,
   }),
 
   computed: {
-    ...mapState(['pubdata']),
     formTitle() {
       return this.editedIndex === -1 ? 'New Item' : 'Edit Item';
     },
-    topicList() {
-      const topicNameArr = this.pubdata.map(pub => pub.topicName);
-      return topicNameArr.filter((topicName, index) => topicNameArr.indexOf(topicName) === index).sort();
+    topicNameList() {
+      if (this.topicList) return this.topicList.map(topic => topic.topic_name);
+      return {};
     },
-    msgtypeList() {
-      const msgTypeArr = this.pubdata.map(pub => pub.msgType);
-      return msgTypeArr.filter((msgtype, index) => msgTypeArr.indexOf(msgtype) === index).sort();
+    messageTypeList() {
+      if (this.topicList) return this.topicList.map(topic => topic.message_type);
+      return {};
     },
+    ...mapGetters({
+      currentRos: 'rosStore/getCurrentRos',
+    }),
   },
   //	return array.indexOf( item ) === idx ;
 
@@ -186,22 +202,25 @@ export default {
   },
 
   methods: {
-    ...mapActions([ROS.SET_PUB_LIST]),
     initialize() {},
     editItem(item) {
-      this.editedIndex = this.pubdata.indexOf(item);
+      this.editedIndex = this.currentRos.pub_data.indexOf(item);
       this.editedItem = Object.assign({}, item);
       this.dialog = true;
     },
 
     deleteItem(item) {
-      const index = this.pubdata.indexOf(item);
-      confirm('Are you sure you want to delete this item?') &&
-        this.pubdata.splice(index, 1) &&
-        this.SET_PUB_LIST(this.pubdata);
+      const title = `${item.pub_name}을 삭제하겠습니까?`;
+      const text = '삭제된 내용은 복구할 수 없습니다';
+      const executeFunc = () => {
+        this.$store.dispatch('rosStore/removePub', {
+          pubItem: item,
+          ros: this.currentRos,
+        });
+      };
+      eventHub.$emit('showConfirm', title, text, executeFunc);
     },
     close() {
-      console.log('on Close dialog');
       this.dialog = false;
       setTimeout(() => {
         this.editedItem = Object.assign({}, this.defaultItem);
@@ -212,21 +231,29 @@ export default {
     save() {
       try {
         this.formHasErrors = false;
-        Object.keys(this.editedItem).forEach(f => {
+        Object.keys(this.defaultItem).forEach(f => {
+          console.log(this.editedItem[f]);
           if (!this.editedItem[f]) this.formHasErrors = true;
-          this.$refs[f].validate(true);
+          this.$refs[f] && this.$refs[f].validate(true);
         });
         if (this.formHasErrors) return;
 
+        // Edit item
         if (this.editedIndex > -1) {
-          Object.assign(this.pubdata[this.editedIndex], this.editedItem);
-          this.SET_PUB_LIST(this.pubdata);
+          console.log('수정!');
+          this.$store.dispatch('rosStore/editPub', {
+            pubItem: this.editedItem,
+            ros: this.currentRos,
+          });
         } else {
-          this.pubdata.push(this.editedItem);
-          this.SET_PUB_LIST(this.pubdata);
+          // add item
+          this.$store.dispatch('rosStore/addPub', {
+            pubItem: this.editedItem,
+            ros: this.currentRos,
+          });
+          console.log('생성입니다');
         }
         this.dialog = false;
-        this.$alert('success', '등록 되었습니다.');
         setTimeout(() => {
           this.editedItem = Object.assign({}, this.defaultItem);
           this.editedIndex = -1;
@@ -242,13 +269,13 @@ export default {
     run(item) {
       try {
         const topic = new ROSLIB.Topic({
-          ros: this.$ros(),
-          name: item.topicName,
-          messageType: item.msgType,
+          ros: this.rosObj,
+          name: item.topic_name,
+          messageType: item.message_type,
         });
-        const message = new ROSLIB.Message(item.msg);
+        const message = new ROSLIB.Message(JSON.parse(item.message));
+        console.log(message);
         topic.publish(message);
-        this.$alert('success', `${item.pubname} publish 완료`);
       } catch (e) {
         console.error(e);
       }
