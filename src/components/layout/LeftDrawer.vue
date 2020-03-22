@@ -38,7 +38,7 @@
               <v-btn icon>
                 <v-icon dense>edit</v-icon>
               </v-btn>
-              <v-btn icon @click="onClickDelete(item)">
+              <v-btn icon @click.stop="onClickDelete(item)">
                 <v-icon dense>delete</v-icon>
               </v-btn>
             </v-container>
@@ -74,9 +74,7 @@ export default {
     onClickDelete: function(item) {
       const title = `${item.connection_name}을 삭제하겠습니까?`;
       const text = '삭제된 Ros Connection은 복구할 수 없습니다';
-      console.log('clicked: ', item);
       const executeFunc = () => {
-        console.log('item: ', item);
         this.$store.dispatch('rosStore/removeRos', item);
       };
       eventHub.$emit('showConfirm', title, text, executeFunc);
