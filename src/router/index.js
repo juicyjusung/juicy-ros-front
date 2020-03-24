@@ -8,6 +8,7 @@ import Test from '@/views/Main';
 import Ros from '@/views/RosPage';
 
 import Store from '@/store';
+import VueAnalytics from 'vue-analytics';
 
 Vue.use(Router);
 
@@ -109,6 +110,11 @@ router.beforeEach(async (to, from, next) => {
   } else {
     next();
   }
+});
+
+Vue.use(VueAnalytics, {
+  id: 'UA-161745730-1',
+  router,
 });
 
 export default router;
