@@ -51,7 +51,8 @@
       <v-card-actions>
         <v-container justify-center>
           <v-layout row justify-center>
-            <v-btn color="primary" @click="submit">Submit</v-btn>
+            <v-btn class="mx-2" color="primary" @click="submit">Submit</v-btn>
+            <v-btn class="mx-2" color="secondary" @click="navigateToLogin()">Cancel</v-btn>
           </v-layout>
         </v-container>
       </v-card-actions>
@@ -103,8 +104,36 @@ export default {
         });
       }
     },
+    navigateToLogin() {
+      this.$emit('navigateToLogin');
+    },
   },
 };
 </script>
 
-<style lang="scss"></style>
+<style lang="scss" scoped>
+.v-card {
+  border-radius: 50px !important;
+}
+.margin-rx-10 {
+  margin-right: 10px !important;
+}
+.loading-overlay {
+  z-index: 10;
+  top: 0;
+  left: 0;
+  right: 0;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  .loading-word {
+    position: absolute;
+    top: 60%;
+    font-weight: 700;
+  }
+}
+</style>

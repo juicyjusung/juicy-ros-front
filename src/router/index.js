@@ -24,6 +24,11 @@ const routes = [
         component: Main,
       },
       {
+        path: 'main',
+        name: 'main',
+        component: Main,
+      },
+      {
         path: 'test',
         name: 'test',
         component: Test,

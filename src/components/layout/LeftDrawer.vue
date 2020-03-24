@@ -67,7 +67,9 @@ export default {
     }),
   },
   methods: {
-    setCurrentRos: function(ros) {
+    setCurrentRos: async function(ros) {
+      await this.$store.dispatch('rosStore/getRos');
+
       this.$router.push({ path: '/ros' }).catch(() => {});
       this.$store.commit('rosStore/setCurrentRos', ros);
     },

@@ -109,7 +109,6 @@ export default {
       state.ross = payload;
     },
     addRos(state, payload) {
-      console.log('addRos payload: ', payload);
       state = state.ross.push(payload);
     },
     setCurrentRos(state, payload) {

@@ -33,8 +33,8 @@
       <v-card-actions>
         <v-container justify-center>
           <v-layout row justify-center>
-            <v-btn color="primary" @click="submit">Login</v-btn>
-            <v-btn @click="navigateToRegister">Signup</v-btn>
+            <v-btn class="mx-2" color="primary" @click="submit">Login</v-btn>
+            <v-btn class="mx-2" color="secondary" @click="navigateToRegister">Signup</v-btn>
           </v-layout>
         </v-container>
       </v-card-actions>

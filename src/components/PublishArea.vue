@@ -240,7 +240,6 @@ export default {
 
         // Edit item
         if (this.editedIndex > -1) {
-          console.log('수정!');
           this.$store.dispatch('rosStore/editPub', {
             pubItem: this.editedItem,
             ros: this.currentRos,
@@ -251,7 +250,6 @@ export default {
             pubItem: this.editedItem,
             ros: this.currentRos,
           });
-          console.log('생성입니다');
         }
         this.dialog = false;
         setTimeout(() => {
@@ -274,7 +272,6 @@ export default {
           messageType: item.message_type,
         });
         const message = new ROSLIB.Message(JSON.parse(item.message));
-        console.log(message);
         topic.publish(message);
       } catch (e) {
         console.error(e);

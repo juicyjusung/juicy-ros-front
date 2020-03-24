@@ -3,7 +3,7 @@
     <v-col>
       <v-container v-if="activePanel === 'registration'">
         <transition name="register-transition" enter-active-class="animated slideInRight">
-          <register-component @signup="register" @loginNav="navigateToLogin"></register-component>
+          <register-component @signup="register" @navigateToLogin="navigateToLogin"></register-component>
         </transition>
       </v-container>
       <div v-if="activePanel === 'login'">
@@ -63,7 +63,7 @@ export default {
     async register(userInfo) {
       try {
         await this.$store.dispatch('authStore/registerUser', userInfo);
-
+        this.navigateToLogin();
         this.$emit('loginSuccess');
         this.$notify({
           group: 'all',

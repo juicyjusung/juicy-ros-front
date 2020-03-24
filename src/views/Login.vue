@@ -25,17 +25,7 @@ export default {
   methods: {
     async loggedIn() {
       // Do something when logged in.
-      this.$router.push('/');
-      try {
-        await this.$store.dispatch('rosStore/getRos');
-      } catch (e) {
-        console.error(e);
-        this.$notify({
-          group: 'all',
-          type: 'error',
-          text: '사용자 ros 정보 로드가 실패하였습니다.',
-        });
-      }
+      this.$router.push('/main');
     },
   },
 };
