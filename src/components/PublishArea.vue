@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-row>
+    <v-row class="mx-1">
       <v-hover v-slot:default="{ hover }">
         <v-card width="100%" class="ma-2" :elevation="hover ? 4 : 2">
           <v-card-title>

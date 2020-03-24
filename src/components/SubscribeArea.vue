@@ -1,6 +1,6 @@
 <template>
   <v-container fluid>
-    <v-row>
+    <v-row class="mx-1">
       <v-hover v-slot:default="{ hover }">
         <v-card width="100%" class="ma-2" :elevation="hover ? 4 : 2">
           <v-card-title>
@@ -31,7 +31,7 @@
         </v-card>
       </v-hover>
     </v-row>
-    <v-row v-for="topic in selected" :key="topic.topic_name">
+    <v-row v-for="topic in selected" :key="topic.topic_name" class="mx-1">
       <v-card class="ma-2" title width="100%" dark>
         <v-card-title :id="topic.topic_name.replace(/\//gi, '_')" ref="topic.topic_name">
           {{ topic.topic_name }}
