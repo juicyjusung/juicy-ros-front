@@ -1,29 +1,29 @@
-# juicy-ros-front
+# juicyros-front
+ROS bridge 테스트 및 모니터링을 위한 [juicyros](https://juicyros.netlify.com/) front
 
-## Project setup
+
+### project
+- [juicyros-backend](https://github.com/juicyjusung/juicyros-backend)
+- [juicyros-front](https://github.com/juicyjusung/juicyros-front)
+
+## 설치
 ```
-npm install
+git clone https://github.com/juicyjusung/juicyros-front
+cd juicyros-front
+npm i
 ```
 
-### Compiles and hot-reloads for development
+## development
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
+## build for production
 ```
 npm run build
 ```
 
-### Run your unit tests
+## env set (.env)
 ```
-npm run test:unit
+VUE_APP_API_BASE_URL=
 ```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
